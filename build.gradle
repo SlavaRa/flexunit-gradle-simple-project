@@ -1,0 +1,45 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.gradlefx:gradlefx:1.3.0'
+        classpath 'de.undercouch:gradle-download-task:2.0.0'
+    }
+}
+apply plugin: 'gradlefx'
+apply plugin: 'de.undercouch.download'
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+dependencies {
+    test fileTree(dir: "$LIB_FLEXUNIT/flexunit", include: '*.swc')
+    test fileTree(dir: "$LIB_FLEXUNIT/flexunit", include: '*.jar')
+}
+flexHome = FLEX_HOME
+frameworkLinkage = 'none'
+type = 'swc'
+srcDirs = ['src']
+testDirs = ['test/src']
+flexUnit {
+    command = FLASH_PLAYER_EXE
+    additionalCompilerOptions = [
+        "-target-player=$TARGET_PLAYER",
+        '-incremental=true'
+    ]
+}
+task downloadFlexUnit(type: de.undercouch.gradle.tasks.download.Download) {
+    src URL_FLEXUNIT
+    dest new java.io.File(TMP_DIR, "flexunit.zip")
+}
+task downloadAndUnzipFlexUnit(type: Copy) {
+    if (!file("$LIB_FLEXUNIT/flexunit").exists()) {
+        dependsOn downloadFlexUnit
+        from zipTree(downloadFlexUnit.dest)
+        into LIB_FLEXUNIT
+    }
+}
+test.dependsOn downloadAndUnzipFlexUnit
