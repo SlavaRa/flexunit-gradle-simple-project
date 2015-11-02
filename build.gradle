@@ -9,14 +9,24 @@ buildscript {
         classpath 'de.undercouch:gradle-download-task:2.0.0'
     }
 }
+
 apply plugin: 'gradlefx'
 apply plugin: 'de.undercouch.download'
+apply plugin: 'maven'
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {url "https://repository.apache.org/service/local/repositories/snapshots/content"}
+    maven {url "https://repository.apache.org/content/repositories/snapshots"}
 }
 dependencies {
-    test fileTree(dir: "$LIB_FLEXUNIT/flexunit", include: '*.swc')
+//    test 'org.apache.flex.flexunit:flexUnitTasks:4.3.0-SNAPSHOT'
+    test group: 'org.apache.flex.flexunit', name:'flexunit-as3', version: '4.3.0-SNAPSHOT', ext:'swc'
+    test group: 'org.apache.flex.flexunit', name:'flexunit-cilistener', version: '4.3.0-SNAPSHOT', ext:'swc'
+    test group: 'org.apache.flex.flexunit', name:'flexunit-aircilistener', version: '4.3.0-SNAPSHOT', ext:'swc'
+    test group: 'org.apache.flex.flexunit', name:'flexunit-flexcoverlistener', version: '4.3.0-SNAPSHOT', ext:'swc'
+    test group: 'org.apache.flex.flexunit', name:'flexunit-uilistener', version: '4.3.0-SNAPSHOT', ext:'swc'
+    test group: 'org.apache.flex.flexunit', name:'fluint-extensions', version: '4.3.0-SNAPSHOT', ext:'swc'
     test fileTree(dir: "$LIB_FLEXUNIT/flexunit", include: '*.jar')
 }
 flexHome = FLEX_HOME
